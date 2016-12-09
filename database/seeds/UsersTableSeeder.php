@@ -16,6 +16,8 @@ class UsersTableSeeder extends Seeder
      */
     public function run()
     {
+        User::truncate();
+        
         User::create([
             'first_name'    => 'FirstN',
             'last_name'     => 'LastN',

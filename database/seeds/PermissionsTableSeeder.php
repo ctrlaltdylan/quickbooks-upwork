@@ -16,6 +16,8 @@ class PermissionsTableSeeder extends Seeder
      */
     public function run()
     {
+        Permission::truncate();
+        
         Permission::create([
             'name'          => 'user_create',
             'description'   => 'Create New User',

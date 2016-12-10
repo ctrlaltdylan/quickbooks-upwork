@@ -15,11 +15,15 @@
                     </ol>
                 </div>
             </h1>
-
-            <a href="{{ url('/clients/create') }}" class="btn btn-success pull-right m-b-10">
+			
+            @if(Auth::user()->permissions->contains(2))
+             <a href="{{ url('/clients/create') }}" class="btn btn-success pull-right m-b-10">
                 <i class="fa fa-plus-circle" aria-hidden="true"></i>
                 Add @lang('app.clients')
-            </a>
+             </a> 
+			@endif
+            
+            
 
             @if( Session::has('success'))
                 <div class="alert alert-success alert-notification" role="alert">
@@ -54,9 +58,12 @@
                           {!!  Form::input('text', 'job', null, ['class' => 'form-control clear','placeholder'=>'Job Number'])  !!}
                          </td>
                         <td>
+                        @if(Auth::user()->role_id==1) 
                          <label for="jn">Status</label>
-                        {!! Form::select('status', $status, null, ['class' => 'form-control select']) !!}
+                         {!! Form::select('status', $status, null, ['class' => 'form-control select']) !!}
+                        @endif
                         </td>
+                        
                        </tr>
 
                        <tr>
@@ -94,31 +101,34 @@
         <div class="col-lg-12">
             <div class="panel panel-default">
                 <div class="panel-body p-b-0">
-                    <table  class="table table-striped table-bordered table-hover m-b-10" id="dataTables-example">
+                <div class="table-responsive">
+                    <table class="table table-striped table-bordered table-hover m-b-10" id="dataTables-example">
                         <thead>
                         <tr>
-                        <th>Lead Date</th>
-                            <th>Name</th>
-                            <th>Address</th>
-                            <th>Phone#</th>
-                            <th>Email</th>
+                        <th width="2%">#</th>
+                        <th width="9%">Lead Date</th>
+                            <th width="11%">Name</th>
+                            <th width="26%" style="width:22% !important">Address</th>
+                            <th width="9%">Phone#</th>
+                            <th width="4%">Email</th>
                             
-                            <th>Lead Type</th>
-                            <th>Lead Source</th>
-                            <th>Scope</th>
-                            <th>Estimator</th>
-                            <th>App Date</th>
+                            <th width="11%">Lead Type</th>
+                            <th width="12%">Lead Source</th>
+                            <th width="4%">Scope</th>
+                            <th width="5%">Estimator</th>
+                            <th width="3%">App Date</th>
                             
-                            <th width="10%">Action</th>
+                            <th width="4%">Action</th>
                             
                         </tr>
                         </thead>
                         <tbody>
                          @foreach($clients as $client)
                          <tr>
+                         <td>{!! $client->id !!}</td>
                             <td>{!! $client->lead_date !!}</td>
                             <td>{!! $client->first_name!!} {!! $client->last_name!!}</td>
-                            <td>{!! $client->city!!}, {!! $client->state!!}, {!! $client->zip!!}</td>
+                            <td width="22%">{!! $client->address1!!},{!! $client->city!!},{!! $client->state!!},{!! $client->zip!!}</td>
                             <td>{!! $client->phone!!}</td>
                             <td>{!! $client->email!!}</td>
                             <td>{!! $client->lead_type!!}</td>
@@ -127,10 +137,13 @@
                             <td>{!! @$client->user->first_name!!} {!! @$client->user->last_name!!}</td>
                             <td>{!! $client->appointment_date!!}</td>
                             
-                            <td width="6%">
-                                <a href="/clients/{{$client->id}}/edit/" class="btn btn-success btn-circle">
+                            <td width="4%">
+                            	@if(Auth::user()->permissions->contains(3))
+                            		<a href="/clients/{{$client->id}}/edit/" class="btn btn-success btn-circle">
                                             <i class="fa fa-edit" aria-hidden="true"></i>
                                         </a>
+                            	@endif
+                                
                                  <a href="/clients/{{$client->id}}" class="btn btn-success btn-circle">
                                             <i class="fa fa-eye" aria-hidden="true"></i>
                                         </a>        
@@ -141,6 +154,7 @@
                     </table>
                    
                 </div>
+              </div>
 
             </div>
 
@@ -152,7 +166,9 @@
 @section('scripts')
  <script>
   $(document).ready(function() {
-		$('#dataTables-example').DataTable({});
+		$('#dataTables-example').DataTable({
+			responsive: true
+			});
  	    $('.date').datepicker({
 			format: "mm-yyyy",
 			viewMode: "months", 

@@ -10,6 +10,7 @@ use App\Helpers\helpers;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use App\Http\Requests\User\UserCreateRequest;
+use Hash,Auth;
 
 /**
  * Class UserController
@@ -31,6 +32,7 @@ class UserController extends Controller
      */
     public function index(Request $request)
     {
+
         $query = User::query();
 
         if($request->has('status'))
@@ -66,10 +68,10 @@ class UserController extends Controller
     public function store(UserCreateRequest $request)
     {
         // dd($request->get('permissions'));
+        $data = $request->all();
+        $data['password'] = Hash::make($data['password']);
 
-        $user = User::create(
-            $request->all()
-        );
+        $user = User::create($data);
         $this->helpers->saveAudit([
             'page'=>'User',
             'action'=>'Added - '.$request->first_name." ".$request->last_name,

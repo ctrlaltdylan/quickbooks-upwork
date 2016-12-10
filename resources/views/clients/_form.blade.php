@@ -34,22 +34,10 @@
       </div>
       <div class="col-xs-3">
         <div class="form-group">
-          <label for="phone">Alternative Phone </label>
-          {!! Form::input('text', 'alternative_phone', null, ['class' => 'form-control']) !!}
-        </div>
-      </div>      
-      <div class="col-xs-3">
-        <div class="form-group">
           <label for="email">Email</label>
          {!! Form::input('text', 'email', null, ['class' => 'form-control']) !!}
         </div>
       </div>
-      <div class="col-xs-3">
-        <div class="form-group">
-          <label for="email">Alternative Email</label>
-         {!! Form::input('text', 'alternative_email', null, ['class' => 'form-control']) !!}
-        </div>
-      </div>      
     </div>
     <!-- /.row -->
     <div class="row">
@@ -89,7 +77,7 @@
       <div class="col-xs-3">
         <div class="form-group">
           <label for="qb">Check QB</label>
-             {!! Form::select('chk_q_b', ['1'=>'Yes','0'=>'No'], null, ['class' => 'form-control','id'=>'lead_type',(isset($client) && $client->qb_migrated == 1?'disabled':'')]) !!}
+             {!! Form::select('chk_q_b', ['1'=>'Yes','0'=>'No'], null, ['class' => 'form-control','id'=>'lead_type']) !!}
         </div>
       </div>
     </div>

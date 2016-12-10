@@ -9,7 +9,7 @@
       <div class="pull-right">
         <ol class="breadcrumb">
           <li><a href="{{ route('admin.dashboard') }}">@lang('app.home')</a></li>
-          <li><a href="{{ route('admin.role.list') }}">@lang('app.clients')</a></li>
+          <li><a href="{{ url('clients') }}">@lang('app.clients')</a></li>
           <li class="active">@lang('app.create_client')</li>
         </ol>
       </div>

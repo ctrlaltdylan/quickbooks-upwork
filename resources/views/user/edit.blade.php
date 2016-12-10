@@ -150,7 +150,7 @@
 
                             <div class="col-md-6">
                                 @foreach($permissions as $permission)
-                                    <input type="checkbox" name="permissions[]" value="{{ $permission->id }}" @if($user->permissions && in_array($permission->id, $user->getPermissionsIdsAttribute())) checked @endif>{{ $permission->description }}<br>
+                                    <input type="checkbox" name="permissions[]" value="{{ $permission->id }}" @if($user->permissions && in_array($permission->id, $user->getPermissionsIdsAttribute())) checked @endif> {{ $permission->description }}<br>
                                 @endforeach
                             </div>
                         </div>

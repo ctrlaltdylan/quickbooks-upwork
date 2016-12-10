@@ -15,11 +15,14 @@
                     </ol>
                 </div>
             </h1>
-
-            <a href="{{ route('admin.user.create') }}" class="btn btn-success">
+			
+            @if(Auth::user()->permissions->contains(1))
+             <a href="{{ route('admin.user.create') }}" class="btn btn-success">
                 <i class="fa fa-plus-circle" aria-hidden="true"></i>
                 Add User
-            </a>
+             </a>
+			@endif
+            
 
             @if( Session::has('success'))
                 <div class="alert alert-success alert-notification" role="alert">

@@ -9,9 +9,8 @@ use App\Models\User;
 use App\Models\Client;
 use App\Models\Productionemail;
 use App\Helpers\helpers;
-use App\Helpers\QuickBook;
 
-use Datatables, Validator, Redirect, Input;
+use Datatables, Validator, Redirect, Input,Auth;
 
 class ClientController extends Controller
 {
@@ -31,7 +30,6 @@ class ClientController extends Controller
     {
         $this->home = '/clients';
         $this->helpers = new helpers;
-        $this->QuickBookHelper = new QuickBook();
     }
 
 
@@ -70,8 +68,12 @@ class ClientController extends Controller
             $qry->where('phone', $request->input('phone'));
         }
 
-        if ($request->input('status')) {
-            $qry->where('status', $request->input('status'));
+        if(Auth::user()->permissions->contains(5)&&Auth::user()->role_id!=1) {
+            $qry->where('status', 'in_production');
+        } else {
+             if ($request->input('status')) {
+             $qry->where('status', $request->input('status'));
+             }
         }
 
         if ($request->input('lead_type')) {
@@ -144,10 +146,7 @@ class ClientController extends Controller
             return Redirect::back()->withInput()->withErrors($validator);
         } else {
             $data = $this->formatDate($request);
-            // Update data inserted with default values
-            $data['qb_migrated'] = 0;
-
-            $client  = Client::create($data);
+            Client::create($data);
         }
         $this->helpers->saveAudit(
             [
@@ -155,18 +154,6 @@ class ClientController extends Controller
                 'action' => 'Added - ' . $data['first_name'] . ' ' . $data['last_name'],
             ]
         );
-
-        // Save to QuickBook
-        if($data['chk_q_b'])
-        {
-            $isAdded = $this->QuickBookHelper->saveCustomerToQuickBook($data);
-            // Update Client
-            if($isAdded)
-            {
-                $client->qb_migrated = 1;
-                $client->save();
-            }
-        }
 
         return redirect($this->home);
     }
@@ -245,17 +232,6 @@ class ClientController extends Controller
                 $this->sendPtP($request->all());
             }
 
-            // Save to QuickBook
-            $data['qb_migrated'] = $client->qb_migrated;
-            if(isset($data['chk_q_b']) && $data['chk_q_b'] && $client->qb_migrated == 0)
-            {
-                $isAdded = $this->QuickBookHelper->saveCustomerToQuickBook($data);
-                // Update Client
-                if($isAdded)
-                {
-                    $data['qb_migrated'] = 1;
-                }
-            }
 
             $client->update($data);
             $this->helpers->saveAudit(

@@ -67,18 +67,18 @@ class UserController extends Controller
      */
     public function store(UserCreateRequest $request)
     {
-        // dd($request->get('permissions'));
         $data = $request->all();
-        $data['password'] = Hash::make($data['password']);
+
+        $data['password'] = bcrypt(($data['password']));
 
         $user = User::create($data);
+
         $this->helpers->saveAudit([
             'page'=>'User',
             'action'=>'Added - '.$request->first_name." ".$request->last_name,
         ]);
+
         $user->permissions()->attach($request->get('permissions'));
-
-
 
         return redirect()->route('admin.user.list')->with(['success' => 'User ' . $user->first_name . ' added successfully.']);
     }
